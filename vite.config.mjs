@@ -23,7 +23,7 @@ export default defineConfig({
         copy({
           targets: [
             {
-              src: 'rust/pkg/wasm_img_hash_bg.wasm',
+              src: 'rust/pkg/wasm_phash_bg.wasm',
               dest: 'dist',
             },
           ],

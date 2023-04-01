@@ -19,10 +19,10 @@
     "rust/pkg"
   ],
   "scripts": {
-    "build:rust": "cd rust && wasm-pack build --target nodejs --out-dir pkg",
-    "build:ts": "tsc",
+    "build:rust": "cd rust && rm -rf pkg && wasm-pack build --target nodejs --out-dir pkg",
+    "build:ts": "rm -rf dist && tsc",
     "build": "npm run build:rust && npm run build:ts",
-    "build:vite": "vite build",
+    "build:vite": "rm -rf dist && vite build",
     "prepublishOnly": "npm run build:vite",
     "test:wasm": "cd rust && wasm-pack test --node -- --nocapture"
   },
