@@ -583,7 +583,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "wasm-img-hash"
+name = "wasm-phash"
 version = "0.1.0"
 dependencies = [
  "console_error_panic_hook",

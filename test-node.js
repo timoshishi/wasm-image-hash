@@ -1,4 +1,4 @@
-const wasmModule = require('./dist/index_node.cjs.js')
+const wasmModule = require('./dist/wasm-phash.umd.js')
 const fs = require('fs')
 
 ;(async () => {

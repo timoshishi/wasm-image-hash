@@ -1,5 +1,5 @@
 [package]
-name = "wasm-img-hash"
+name = "wasm-phash"
 version = "0.1.0"
 authors = ["timoshishi <timfrrst@gmail.com>"]
 edition = "2021"
