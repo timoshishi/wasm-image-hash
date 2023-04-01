@@ -1,0 +1,22 @@
+[package]
+name = "wasm_image_hash"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[package.metadata.wasm-bindgen]
+typescript = true
+
+[dependencies]
+wasm-bindgen = "0.2"
+image = "0.23"
+img_hash = "3.2.0"  # Update the version to 3.2.0
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  "console",
+]
+
+[lib]
+crate-type = ["cdylib"]
