@@ -10,5 +10,4 @@ rust/Cargo.lock
 rust/bin/
 rust/pkg/
 rust/wasm-pack.log
-
-rust2
+.DS_Store

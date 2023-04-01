@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "description": "wasm perceptual image hashing module",
   "engines": "node >= 18.0.0",
-  "main": "dist/index.cjs",
+  "main": "./dist/wasm-phash.umd.cjs",
   "module": "dist/index.es",
-  "bin": "dist/index_node.cjs.js",
+  "bin": "dist/index.cjs.js",
   "types": "typings/index.d.ts",
   "licenses": [
     {
@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.3",
+    "buffer": "^6.0.3",
     "node-fetch": "^3.3.1"
   }
 }

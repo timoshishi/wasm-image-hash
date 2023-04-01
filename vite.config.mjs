@@ -3,21 +3,18 @@ import wasm from 'vite-plugin-wasm'
 import topLevelAwait from 'vite-plugin-top-level-await'
 import path from 'path'
 import copy from 'rollup-plugin-copy'
-
+const libName = 'wasm-phash'
 export default defineConfig({
   build: {
     assetsDir: 'assets',
     lib: {
       entry: path.resolve(__dirname, 'src', 'index.ts'),
       name: 'WasmImgHash',
-      formats: ['es', 'cjs'],
-      fileName: (format) => (format === 'cjs' ? 'index_node.cjs.js' : 'index.es.js'),
+      formats: ['es', 'umd'],
+      fileName: (format) =>
+        format === 'umd' ? `${libName}.${format}.js` : `${libName}.js`,
     },
     rollupOptions: {
-      input: {
-        // Add a new entry for Node.js
-        index_node: path.resolve(__dirname, 'src', 'index.node.ts'),
-      },
       external: ['fs', 'path', 'node-fetch'],
       output: {
         exports: 'named',
