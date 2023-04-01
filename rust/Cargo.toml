@@ -1,16 +1,25 @@
 [package]
-name = "wasm_image_hash"
+name = "wasm-img-hash"
 version = "0.1.0"
+authors = ["timoshishi <timfrrst@gmail.com>"]
 edition = "2021"
+desciption = "WebAssembly image hashing"
+repository = "none"
+license = "MIT"
+readme = "README.md"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[package.metadata.wasm-bindgen]
-typescript = true
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["console_error_panic_hook_feature"]
+console_error_panic_hook_feature = ["console_error_panic_hook"]
 
 [dependencies]
-wasm-bindgen = "0.2"
+wasm-bindgen = "0.2.63"
 image = "0.23"
-img_hash = "3.2.0"  # Update the version to 3.2.0
+img_hash = "3.2.0"
+console_error_panic_hook = { version = "0.1.6", optional = true }
 
 [dependencies.web-sys]
 version = "0.3"
@@ -18,5 +27,19 @@ features = [
   "console",
 ]
 
-[lib]
-crate-type = ["cdylib"]
+# The `console_error_panic_hook` crate provides better debugging of panics by
+# logging them with `console.error`. This is great for development, but requires
+# all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
+# code size when deploying.
+
+# `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
+# compared to the default allocator's ~10K. It is slower than the default
+# allocator, however.
+wee_alloc = { version = "0.4.5", optional = true }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3.13"
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"

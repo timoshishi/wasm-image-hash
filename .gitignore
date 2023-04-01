@@ -1,1 +1,14 @@
 node_modules
+# Rust stuff
+rust/target
+rust/Cargo.lock
+yarn-error.log
+
+/target
+**/*.rs.bk
+rust/Cargo.lock
+rust/bin/
+rust/pkg/
+rust/wasm-pack.log
+
+rust2
