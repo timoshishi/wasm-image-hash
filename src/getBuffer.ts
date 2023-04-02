@@ -1,5 +1,5 @@
 // import { Buffer } from 'buffer/'
-import { HashImgOpts, InputData } from '.'
+import { HashImgOpts, InputData } from './hashImg'
 import { File } from 'buffer'
 /**
  * Get an ArrayBuffer from input data
@@ -27,7 +27,7 @@ export async function getBuffer(
       ...(fetchOptions || {}),
     })
     buffer = await response.arrayBuffer()
-  } else if (input instanceof File || input instanceof Blob) {
+  } else if (input instanceof Blob || input instanceof File) {
     // If input is a File object, read its contents into a buffer
     buffer = await input.arrayBuffer()
   } else if (Buffer.isBuffer(input)) {

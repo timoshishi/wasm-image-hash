@@ -3,13 +3,14 @@ import wasm from 'vite-plugin-wasm'
 import topLevelAwait from 'vite-plugin-top-level-await'
 import path from 'path'
 import copy from 'rollup-plugin-copy'
+import terser from '@rollup/plugin-terser'
 
 export default defineConfig({
   build: {
     assetsDir: 'assets',
     lib: {
       entry: path.resolve(__dirname, 'src', 'index.ts'),
-      name: 'WasmImgHash',
+      name: 'wasm-img-hash',
       formats: ['es', 'umd'],
       fileName: (format, entry) =>
         format === 'umd' ? `${entry}.${format}.js` : `${entry}.js`,
@@ -18,6 +19,9 @@ export default defineConfig({
       external: ['fs', 'path', 'node-fetch'],
       output: {
         exports: 'named',
+        minifyInternalExports: true,
+        esModule: false,
+        plugins: [terser()],
       },
       plugins: [
         copy({

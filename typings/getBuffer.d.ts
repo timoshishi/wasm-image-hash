@@ -1,4 +1,4 @@
-import { HashImgOpts, InputData } from '.';
+import { HashImgOpts, InputData } from './hashImg';
 /**
  * Get an ArrayBuffer from input data
  * @param data - Image data
