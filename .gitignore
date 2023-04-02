@@ -11,3 +11,4 @@ rust/bin/
 rust/pkg/
 rust/wasm-pack.log
 .DS_Store
+coverage

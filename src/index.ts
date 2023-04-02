@@ -1,7 +1,11 @@
 import path from 'path'
-import { Buffer, File } from 'buffer'
 import * as wasm from '../rust/pkg/wasm_phash.js'
 import fs from 'fs'
+import { RequestInit } from 'node-fetch'
+import { getBuffer } from './getBuffer'
+
+export type InputData = Buffer | URL | Blob | File | string | ArrayBuffer | File
+
 async function setupGlobalFetch() {
   // Use node-fetch as polyfill for fetch in Node.js
   const { default: fetch, Headers, Request, Response } = await import('node-fetch')
@@ -15,51 +19,69 @@ async function setupGlobalFetch() {
   global.Response = Response
 }
 
-async function wasmImageHash(
-  data: Buffer | URL | Blob | File | string,
-  bits: number,
-  precise: boolean
-): Promise<string> {
-  if (typeof fetch === 'undefined') {
-    await setupGlobalFetch()
-  }
-  let input = data
-  let buffer
-  if (typeof input === 'string') {
-    // validate URL
-    try {
-      input = new URL(input)
-    } catch (e) {
-      throw new Error('Invalid URL')
-    }
-    // If input is a string, assume it's a URL and fetch it
-    const response = await fetch(input, {
-      mode: 'cors',
-    })
-    buffer = await response.arrayBuffer()
-  } else if (input instanceof File) {
-    // If input is a File object, read its contents into a buffer
-    buffer = await input.arrayBuffer()
-  } else if (Buffer.isBuffer(input)) {
-    // If input is a buffer, convert it to an ArrayBuffer
-    buffer = input.buffer.slice(input.byteOffset, input.byteOffset + input.byteLength)
-  } else {
-    throw new Error('Unsupported input type')
-  }
-  const uintBuff = new Uint8Array(buffer)
-  const result = wasm.image_hash(uintBuff, bits, precise)
-  return result
+export type HashImgOpts = {
+  data: InputData
+  hashBits?: number
+  precise?: boolean
+  fetchOptions?: globalThis.RequestInit
 }
-;(async () => {
+
+/**
+ * Hash an image
+ * @param data - Image data
+ * @param hashBits - Number of bits to use in the hash
+ * @param precise - Use precise hashing
+ * @returns Hash string
+ * @example
+ * ```js
+ * const hash = await hashImg({
+ *  data: 'https://example.com/image.png',
+ * hashBits: 8,
+ * precise: true,
+ * })
+ * ```
+ * @example
+ * ```js
+ * const hash = await hashImg({
+ * data: new File([''], 'image.png'),
+ * hashBits: 8,
+ * precise: false,
+ * })
+ * ```
+ */
+async function hashImg({
+  data,
+  hashBits = 8,
+  precise = true,
+  fetchOptions,
+}: HashImgOpts): Promise<string> {
   try {
-    const png = fs.readFileSync(path.join(__dirname, 'hrse.png'))
-    const jpeg = fs.readFileSync(path.join(__dirname, 'test-image.jpeg'))
-    const res = await wasmImageHash(jpeg, 8, true)
-    console.log('Hash is:', res)
+    if (typeof fetch === 'undefined') {
+      await setupGlobalFetch()
+    }
+    const buffer = await getBuffer(data, fetchOptions)
+    const uintBuff = new Uint8Array(buffer)
+    const result = wasm.image_hash(uintBuff, hashBits, precise)
+    return result
   } catch (error) {
-    console.error(error)
+    throw error
   }
-})()
+}
+
+// ;(async () => {
+//   try {
+//     const png = fs.readFileSync(path.join(__dirname, '..', 'tests', 'images', 'hrse.png'))
+//     const jpeg = fs.readFileSync(
+//       path.join(__dirname, '..', 'tests', 'images', 'test-image.jpeg')
+//     )
+//     const res = await hashImg({ data: jpeg, precise: true })
+//     console.log('Hash is:', res)
+//   } catch (error) {
+//     console.error(error)
+//   }
+// })()
+
 export default {
-  wasmImageHash,
+  hashImg,
+  getBuffer,
 }
